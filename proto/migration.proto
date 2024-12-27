@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package google_authenticator;
+
+message MigrationPayload {
+  repeated MigrationRecord otp_parameters = 1;
+  optional int32 version = 2;
+  optional string batch_id = 3;
+  optional int32 batch_index = 4;
+  optional int32 batch_size = 5;
+}
+
+message MigrationRecord {
+  optional bytes secret = 1;
+  optional string name = 2;
+  optional string issuer = 3;
+  optional Algorithm algorithm = 4;
+  optional Digits digits = 5;
+  optional int32 type = 6;
+  optional int32 counter = 7;
+  optional string otptype = 8;
+}
+
+enum Algorithm {
+   ALGORITHM_UNSPECIFIED = 0;
+   ALGORITHM_SHA1 = 1;
+   ALGORITHM_SHA256 = 2;
+   ALGORITHM_SHA512 = 3;
+}
+
+enum Digits {
+  DIGITS_UNSPECIFIED = 0;
+  DIGITS_SIX = 1;
+  DIGITS_EIGHT = 2;
+}
