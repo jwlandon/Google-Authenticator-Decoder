@@ -1,7 +1,7 @@
 Linux command-line pass code generator (TOTP codes) for codes stored in the Google Authenticator App.
 
 # Background
-At the time of this writing, Google Authenticator was not readily available on Linux, so someting had to be done.
+At the time of this writing, decoding secrets via Linux command line contained within the Google Authenticator app was not readily available.
 This script is used to extract the secret keys from a Google Authenticator QR export code for purposes of genrerating a time-based pass code.
 
 # Requirements
