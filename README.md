@@ -1,10 +1,11 @@
 Linux command-line pass code generator (TOTP codes) for codes stored in the Google Authenticator App.
 
 # Background
-As of the time of this writing, Google Authenticator seems to be available on Android but not on Linux.  This script is used to extract the secret keys from a Google Authenticator QR export code for purposes of genrerating a time-based pass code. 
+At the time of this writing, Google Authenticator was not readily available on Linux, so someting had to be done.
+This script is used to extract the secret keys from a Google Authenticator QR export code for purposes of genrerating a time-based pass code.
 
 # Requirements
-This package is known to work on Ubuntu 24.04, and it should work on other versions as well. 
+This package is known to work on Ubuntu 24.04, but it should also function on other versions. 
 
 ## OS Package: 
 `protobuf-compiler/noble`  -- this package is used to auto-gen the protocol definition
@@ -23,18 +24,20 @@ pyzbar   0.1.9
 
 # Installation
 These steps assume that you have exported your Google Authenticator QR encoded codes as *png file(s) and saved them under ~/my/qr/codes/*png. 
+Simplified steps can be found at the bottom. 
 
-## We install the protobuf-compiler package
+## Install the protobuf-compiler package
 `sudo apt install protobuf-compiler`
 
-## Check out the package
+## Check out this package
 `git clone https://github.com/jwlandon/Google-Authenticator-Decoder.git`
 
 ##  Optionally create a virtual environment
 A virtual environment allows you to have crisp control of python modules.  This step is not required but recommended.  If you decide to operate in a virtual environment, you must activate it upon each use.  If you are comfortable permanently installing the required python packages, then skip this step.
 
-### verify you can see the package contents
+### Follow these steps to operate from under a virtual environment
 ```
+# verify you're in the right place
 $ ls -l Google-Authenticator-Decoder/
 total 56
 -rw-rw-r-- 1 jwlandon jwlandon 34523 Dec 27 15:04 LICENSE
@@ -42,22 +45,26 @@ drwxrwxr-x 2 jwlandon jwlandon  4096 Dec 27 15:08 proto
 drwxrwxr-x 2 jwlandon jwlandon  4096 Dec 27 15:04 qr_codes
 -rw-rw-r-- 1 jwlandon jwlandon  6185 Dec 27 15:04 qr_decoder.py
 -rw-rw-r-- 1 jwlandon jwlandon   135 Dec 27 15:04 README.md
-$
+
+# build the environment
+$ python3 -m venv Google-Authenticator-Decoder
+
+# change directories into the environment
+$ cd Google-Authenticator-Decoder
+
+# activate the environment
+source bin/activate
+
+# your prompt should now look something like this, indicating you are in the environment
+(Google-Authenticator-Decoder) bob@t-pad:~/Google-Authenticator-Decoder$
 ```
-### build the environment
-From the package's parent directory:
-`python3 -m venv Google-Authenticator-Decoder`
-
-### change directories into the environment
-`cd Google-Authenticator-Decoder`
-
-### activate the environment
-`source bin/activate`
 
 ## Compile the migration proto definition file
 Check the directory before we build:
 ```
-$ cd ~/Google-Authenticator-Decoder    # assuming you installed it under your home directory!
+$ pwd
+/home/bob/Google-Authenticator-Decoder
+
 $ ls -l proto/
 total 8
 -rw-rw-r-- 1 jwlandon jwlandon  65 Dec 27 15:06 __init__.py
@@ -77,10 +84,11 @@ total 12
 ```
 ## Install required modules using pip
 ```
-# We install required pip modules
+# the script requires these python modules
 $ pip install pillow pyzbar protobuf pyotp
 
-# We verify modules exist by running "pip list"
+# verify modules exist 
+$ pip list
 
 Package  Version
 -------- -------
@@ -93,11 +101,24 @@ pyzbar   0.1.9
 ## Decode the sample png file included in this package by running: 
 ```
 $ python3 qr_decoder.py
+Record found:
+  Name: This_is_an_Example:email@email.com
+  Issuer: Example_Website
+  Algorithm: 1
+  Digits: 6
+  Type: 2
+    Example_Website This_is_an_Example:email@email.com Token: 088297         <-- your token is here!
 ```
 
-## Place Google Authenticator exported QR code png files into Google-Authenticator-Decoder/qr_codes/
+## Install your Google Authenticator exported QR code png files
+To decode the QR png images provided by Google Authenticator exports, we must copy them into Google-Authenticator-Decoder/qr_codes/
+
 ```
+# copy the png files into the qr_codes directory
 $ cp ~/my/qr/codes/*png ~/Google-Authenticator-Decoder/qr_codes/
+
+# it is wise to change the permissions to read-only for the file owner
+$ chmod 400 qr_codes/*png
 ```
 
 # SIMPLIFIED INSTALLATION STEPS
@@ -107,3 +128,5 @@ $ cp ~/my/qr/codes/*png ~/Google-Authenticator-Decoder/qr_codes/
 3. source bin/activate
 4. pip install pillow pyzbar protobuf pyotp 
 5. python3 qr_decoder.py
+
+Then make sure your qr code exports from Google Authenticator are placed under the qr_codes directory.
